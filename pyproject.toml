@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "gemma-rover"
+version = "0.1.0"
+description = ""
+package-mode = false
+authors = ["Vlad Fatu <colegu123@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+# Add lerobot as a local dependency via relative path
+lerobot = { path = "lerobot", develop = true }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
