@@ -7,9 +7,14 @@ authors = ["Vlad Fatu <colegu123@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+smolagents = { version = "^1.20.0", extras = ["litellm"] }
+pyzbar = "^0.1.9"
 
 # Add lerobot as a local dependency via relative path
 lerobot = { path = "lerobot", develop = true }
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.30.0"
 
 [build-system]
 requires = ["poetry-core"]
