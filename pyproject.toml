@@ -5,6 +5,10 @@ description = ""
 package-mode = false
 authors = ["Vlad Fatu <colegu123@gmail.com>"]
 
+packages = [
+    { include = "base" }
+]
+
 [tool.poetry.dependencies]
 python = "^3.10"
 smolagents = { version = "^1.20.0", extras = ["litellm"] }

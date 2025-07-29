@@ -1,1 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+
+# VSCode or JetBrains IDE
+.vscode/
+.idea/
+
+# Poetry
 poetry.lock
+.cache/
+
+# OS
+.DS_Store
