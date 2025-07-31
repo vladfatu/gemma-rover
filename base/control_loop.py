@@ -1,7 +1,8 @@
 import threading
 import time
+import ollama
 
-from base.rover_state import RoverStormWatchStatus
+from base.lerobot_task_handler import LeRobotTaskHandler
 
 class GemmaThinkingLoop:
     def __init__(self, state):
@@ -12,6 +13,8 @@ class GemmaThinkingLoop:
         self.current_action_fn = None
         self.cancel_event = threading.Event()
         self.stop_requested = False
+        self.gemma_rover = LeRobotTaskHandler(state)
+        print("self.gemma_rover.get_actions():", self.gemma_rover.get_actions())
 
     def start(self):
         self.control_loop_thread.start()
@@ -41,36 +44,57 @@ class GemmaThinkingLoop:
             print(f"[Control Loop] Sleeping {sleep_time:.1f}s before next cycle.")
             time.sleep(sleep_time)
 
+
     def _decide_next_action_with_llm(self):
-        snapshot = self.state.get_snapshot()
-        time.sleep(3)  # Simulated LLM latency
+        state = self.state.to_prompt_string()
 
-        if snapshot["storm_watch_status"] in (
-            RoverStormWatchStatus.INCOMING_STORM,
-            RoverStormWatchStatus.STORM_ONGOING,
-        ):
-            print("[LLM] Storm detected. Prioritizing shelter.")
-            return self.seek_shelter
+        # Format the state into a system prompt or context
+        prompt = f"""
+    You are a control agent for a Mars rover. Based on the current state of the rover, decide what action it should take next.
+    Your mission is to complete the long running task from the current state, but should prioritize safety and operational efficiency.
+    Respond only with one of the following function names (as plain text):
+    {self.gemma_rover.get_actions()}
 
-        elif not snapshot["has_dirt_sample"]:
-            return self.pickup_dirt_sample
-
-        return None
+    Current State:
+    {state}
+    """
         
-    def _run_action_wrapper(self, action_fn):
+        print(f"[LLM] Sending prompt to model: {prompt}")
         try:
+            response = ollama.chat(
+                model="gemma3n:e4b", 
+                messages=[
+                    {"role": "system", "content": "You are a Mars rover control agent."},
+                    {"role": "user", "content": prompt}
+                ]
+            )
+
+            model_reply = response["message"]["content"].strip().lower()
+            print(f"[LLM] Suggested action: {model_reply}")
+
+            return model_reply
+
+        except Exception as e:
+            print(f"[LLM ERROR] Failed to call Ollama: {e}")
+            return None
+
+
+        
+    def _run_action_wrapper(self, action_fn_name):
+        try:
+            action_fn = getattr(self.gemma_rover, action_fn_name)
             action_fn(self.cancel_event)
         finally:
             self.current_action_fn = None
 
 
-    def _start_action(self, action_fn):
+    def _start_action(self, action_fn_name):
         with self.action_lock:
             # Don't restart if same action is already running
             if (
                 self.action_thread
                 and self.action_thread.is_alive()
-                and self.current_action_fn == action_fn
+                and self.current_action_fn == action_fn_name
             ):
                 print("[Action] Same action already running. Skipping restart.")
                 return
@@ -83,50 +107,10 @@ class GemmaThinkingLoop:
                 print("[Action] Previous action stopped.")
 
             self.cancel_event.clear()
-            self.current_action_fn = action_fn
+            self.current_action_fn = action_fn_name
             self.action_thread = threading.Thread(
-                target=self._run_action_wrapper, args=(action_fn,)
+                target=self._run_action_wrapper, args=(action_fn_name,)
             )
             self.action_thread.start()
 
-
-
-    # === ACTION EXAMPLE ===
-    def pickup_dirt_sample(self, cancel_event):
-        print("[Action] Heading to dig zone...")
-        for i in range(50):
-            if cancel_event.is_set():
-                print("[Action] Cancelled while heading to dig zone.")
-                return
-            time.sleep(1)
-
-        print("[Action] Picking up sample...")
-        for i in range(3):
-            if cancel_event.is_set():
-                print("[Action] Cancelled during pickup.")
-                return
-            time.sleep(1)
-
-        self.state.update_state(has_dirt_sample=True)
-        print("[Action] Sample picked up.")
-
-    def seek_shelter(self, cancel_event):
-        print("[Action] Storm detected. Heading to base...")
-        for i in range(10):
-            if cancel_event.is_set():
-                print("[Action] Cancelled while heading to base.")
-                return
-            time.sleep(1)
-
-        print("[Action] Arrived at home base. Waiting out the storm...")
-
-        # Stay sheltered until the storm ends
-        while self.state.get_snapshot()["storm_watch_status"] == RoverStormWatchStatus.INCOMING_STORM or self.state.get_snapshot()["storm_watch_status"] == RoverStormWatchStatus.STORM_ONGOING:
-            if cancel_event.is_set():
-                print("[Action] Cancelled while waiting out storm.")
-                return
-            print("[Action] Still storming... staying inside.")
-            time.sleep(5)
-
-        print("[Action] Storm has cleared. Resuming operations.")
 

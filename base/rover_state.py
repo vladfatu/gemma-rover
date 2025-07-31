@@ -1,5 +1,6 @@
 from enum import Enum
 import threading
+import json
 
 class RoverState:
     def __init__(self):
@@ -9,6 +10,7 @@ class RoverState:
         self.has_scoop = False
         self.has_cloth = False
         self.has_dirt_sample = False
+        self.solar_panel_dirty = False
         self.storm_watch_status = RoverStormWatchStatus.NO_STORM
         self.long_running_task = "Gather dirt samples and move them to drop zone"
   
@@ -24,21 +26,22 @@ class RoverState:
                 "has_scoop": self.has_scoop,
                 "has_cloth": self.has_cloth,
                 "has_dirt_sample": self.has_dirt_sample,
+                "solar_panel_dirty": self.solar_panel_dirty,
                 "storm_watch_status": self.storm_watch_status,
                 "long_running_task": self.long_running_task
             }
 
     def to_prompt_string(self):
         with self._lock:
-            return f"""
-            Current State:
-            - Inside base: {self.inside_base}
-            - Has scoop: {self.has_scoop}
-            - Has cloth: {self.has_cloth}
-            - Has dirt sample: {self.has_dirt_sample}
-            - Storm status: {self.storm_watch_status.value}
-            - Long running task: {self.long_running_task}
-            """
+            return json.dumps({
+                "inside_base": self.inside_base,
+                "has_scoop": self.has_scoop,
+                "has_cloth": self.has_cloth,
+                "has_dirt_sample": self.has_dirt_sample,
+                "solar_panel_dirty": self.solar_panel_dirty,
+                "storm_watch_status": self.storm_watch_status.value,
+                "long_running_task": self.long_running_task
+            }, indent=2)
 
 class RoverStormWatchStatus(Enum):
     INCOMING_STORM = "Incoming Storm"
