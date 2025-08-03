@@ -7,7 +7,7 @@ from lerobot.utils.robot_utils import busy_wait
 from lerobot.utils.visualization_utils import _init_rerun, log_rerun_data
 
 SEARCH_ARM_ACTION = {'arm_shoulder_pan.pos': -5.0, 'arm_shoulder_lift.pos': -98.92428630533719, 'arm_elbow_flex.pos': 99.27895448400182, 'arm_wrist_flex.pos': 19.973137973137966, 'arm_wrist_roll.pos': -0.31746031746031633, 'arm_gripper.pos': 0.867244829886591}
-
+# SEARCH_ARM_ACTION = {'arm_shoulder_pan.pos': -5.0, 'arm_shoulder_lift.pos': -50.0, 'arm_elbow_flex.pos': 70.0, 'arm_wrist_flex.pos': 19.973137973137966, 'arm_wrist_roll.pos': 50.0, 'arm_gripper.pos': 0.867244829886591}
 FPS = 30
 
 # Create the robot and teleoperator configurations

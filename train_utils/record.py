@@ -12,8 +12,8 @@ from lerobot.utils.visualization_utils import _init_rerun
 NUM_EPISODES = 10
 FPS = 30
 EPISODE_TIME_SEC = 20
-RESET_TIME_SEC = 10
-TASK_DESCRIPTION = "Put the dirt in the drop zone"
+RESET_TIME_SEC = 5
+TASK_DESCRIPTION = "Wipe the solar panel with the cloth"
 
 # Create the robot and teleoperator configurations
 robot_config = LeKiwiClientConfig(remote_ip="192.168.10.19", id="gemma-rover")
@@ -31,7 +31,7 @@ dataset_features = {**action_features, **obs_features}
 
 # Create the dataset
 dataset = LeRobotDataset.create(
-    repo_id="vladfatu/gemma_rover_drop_dirt_5",
+    repo_id="vladfatu/gemma_rover_wipe_solar_5",
     fps=FPS,
     features=dataset_features,
     robot_type=robot.name,

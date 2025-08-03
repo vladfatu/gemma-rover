@@ -12,25 +12,25 @@ class LeRobotTaskHandler:
     def __init__(self, state):
         self.state = state
         print("Loading policies...")
-        # self.scoop_up_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_scoop_up_to_4")
-        # self.scoop_put_back_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_scoop_drop_up_to_7")
-        # self.cloth_pick_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_cloth_up_to_5")
-        # self.cloth_put_back_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_cloth_drop_up_to_3")
-        # self.dirt_sample_pick_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_dig_up_to_5")
-        # self.dirt_sample_drop_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_drop_dirt_up_to_5")
-        # self.solar_wipe_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_solar_wipe_up_to_5")
+        self.scoop_up_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_scoop_up_to_4")
+        self.scoop_put_back_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_scoop_drop_up_to_7")
+        self.cloth_pick_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_cloth_up_to_5")
+        self.cloth_put_back_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_cloth_drop_up_to_3")
+        self.dirt_sample_pick_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_cloth_dig_up_to_5")
+        self.dirt_sample_drop_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_drop_dirt_up_to_5")
+        self.solar_wipe_policy = ACTPolicy.from_pretrained("vladfatu/gemma_rover_wipe_solar_up_to_5")
 
-        # print("Connecting to the robot...")
-        # robot_config = LeKiwiClientConfig(remote_ip="192.168.10.19", id="gemma-rover")
-        # self.robot = LeKiwiClient(robot_config)
-        # self.robot.connect()
-        # if not self.robot.is_connected:
-        #     raise ValueError("Robot is not connected!")
+        print("Connecting to the robot...")
+        robot_config = LeKiwiClientConfig(remote_ip="192.168.10.19", id="gemma-rover")
+        self.robot = LeKiwiClient(robot_config)
+        self.robot.connect()
+        if not self.robot.is_connected:
+            raise ValueError("Robot is not connected!")
         
-        # print("Configuring the dataset features...")
-        # action_features = hw_to_dataset_features(self.robot.action_features, "action")
-        # obs_features = hw_to_dataset_features(self.robot.observation_features, "observation")
-        # self.dataset_features = {**action_features, **obs_features}
+        print("Configuring the dataset features...")
+        action_features = hw_to_dataset_features(self.robot.action_features, "action")
+        obs_features = hw_to_dataset_features(self.robot.observation_features, "observation")
+        self.dataset_features = {**action_features, **obs_features}
 
 
     def _run_policy_task(self, policy, task_description, episode_time_sec=15):
@@ -55,23 +55,42 @@ class LeRobotTaskHandler:
         ]
         return actions
 
-    # def pick_scoop(self):
+    # def pick_scoop(self, cancel_event):
     #     self._run_policy_task(self.scoop_up_policy, "Pick up the red scoop", episode_time_sec=15)
 
 
-    # def put_scoop_back(self):
-    #     self._run_policy_task(self.scoop_put_back_policy, "Put the red scoop down", episode_time_sec=15)
+    # def put_scoop_back(self, cancel_event):
+    #     self._run_policy_task(self.scoop_put_back_policy, "Put the red scoop down", episode_time_sec=10)
 
 
-    # def pick_cloth(self):
-    #     self._run_policy_task(self.cloth_pick_policy, "Pick up the cloth", episode_time_sec=15)
+    # def pick_cloth(self, cancel_event):
+    #     self._run_policy_task(self.cloth_pick_policy, "Pick up the cloth", episode_time_sec=10)
+        # print("[Action] Picking up cloth...")
+        # for i in range(5):  # Simulate picking up cloth
+        #     if cancel_event.is_set():
+        #         print("[Action] Cancelled while picking up cloth.")
+        #         return
+        #     # self._run_policy_task(self.cloth_pick_policy, "Pick up the cloth", episode_time_sec=15)
+        #     time.sleep(1)
+        # self.state.update_state(has_cloth=True)
+        # print("[Action] Cloth picked up successfully.")
 
 
-    # def put_cloth_back(self):
-    #     self._run_policy_task(self.cloth_put_back_policy, "Put the cloth down", episode_time_sec=15)
+    # def put_cloth_back(self, cancel_event):
+    #     self._run_policy_task(self.cloth_put_back_policy, "Put the cloth down", episode_time_sec=5)
+        # print("[Action] Putting cloth back...")
+        # for i in range(5):  # Simulate putting cloth back
+        #     if cancel_event.is_set():
+        #         print("[Action] Cancelled while putting cloth back.")
+        #         return
+        #     # self._run_policy_task(self.cloth_put_back_policy, "Put the cloth down", episode_time_sec=15)
+        #     time.sleep(1)
+        # self.state.update_state(has_cloth=False)
+        # print("[Action] Cloth put back successfully.")
 
 
     def pick_dirt_sample(self, cancel_event):
+        # self._run_policy_task(self.dirt_sample_pick_policy, "Use the scoop to pick up dirt samples", episode_time_sec=15)
         print("[Action] Heading to dig zone...")
         self.state.update_state(inside_base=False)
         for i in range(50):
@@ -88,15 +107,25 @@ class LeRobotTaskHandler:
                 return
             time.sleep(1)
 
-        self.state.update_state(has_dirt_sample=True)
-        print("[Action] Sample picked up.")
+        # self.state.update_state(has_dirt_sample=True)
+        # print("[Action] Sample picked up.")
 
 
-    # def drop_dirt_sample(self):
-    #     self._run_policy_task(self.dirt_sample_drop_policy, "Put the dirt in the drop zone", episode_time_sec=15)
+    # def drop_dirt_sample(self, cancel_event):
+    #     # self._run_policy_task(self.dirt_sample_drop_policy, "Drop the dirt sample in the drop zone", episode_time_sec=15)
+    #     print("[Action] Heading to drop zone...")
+    #     for i in range(50):
+    #         if cancel_event.is_set():
+    #             print("[Action] Cancelled while heading to drop zone.")
+    #             return
+    #         # self._run_policy_task(self.dirt_sample_drop_policy, "Drop the dirt sample in the drop zone", episode_time_sec=15)
+    #         time.sleep(1)
+    #     self.state.update_state(has_dirt_sample=False)
+    #     print("[Action] Sample dropped.")
 
 
     def wipe_solar_panel(self, cancel_event):
+        # self._run_policy_task(self.solar_wipe_policy, "Wipe the solar panel with the cloth", episode_time_sec=20)
         print("[Action] Wiping solar panel...")
         for i in range(5):
             if cancel_event.is_set():

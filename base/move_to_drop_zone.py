@@ -123,8 +123,8 @@ def get_velocity_from_observation(observation, default_theta):
     cv2.imwrite("front_image.jpg", front_image)
 
     gray = cv2.cvtColor(front_image, cv2.COLOR_BGR2GRAY)
-    ret, preprocessed_image = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
-    decoded_objects = decode(preprocessed_image)
+    # ret, preprocessed_image = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+    decoded_objects = decode(gray)
     target_qr = None
     if decoded_objects:
         for obj in decoded_objects:
