@@ -40,7 +40,7 @@ We have defined 7 actions that the rover can do. The datasets we recorded and th
 
 4 - **Put the towel back**: The rover can put the towel back in the same location it picked it up from. The dataset used to train this action is available [here](https://huggingface.co/spaces/lerobot/visualize_dataset?path=%2Fvladfatu%2Fgemma_rover_cloth_drop_up_to_3%2Fepisode_0). The trained model is available [here](https://huggingface.co/vladfatu/gemma_rover_cloth_drop_up_to_3).
 
-5 - **Pick up dirt sample**: The rover can pick up a dirt sample from a specific location in the environment. The dataset used to train this action is available [here](https://huggingface.co/spaces/lerobot/visualize_dataset?path=%2Fvladfatu%2Fgemma_rover_cloth_dig_up_to_5%2Fepisode_0). The trained model is available [here](https://huggingface.co/vladfatu/gemma_rover_cloth_dig_up_to_5).
+5 - **Pick up dirt sample**: The rover can pick up a dirt sample from a specific location in the environment. The dataset used to train this action is available [here](https://huggingface.co/spaces/lerobot/visualize_dataset?path=%2Fvladfatu%2Fgemma_rover_dig_up_to_5%2Fepisode_0). The trained model is available [here](https://huggingface.co/vladfatu/gemma_rover_cloth_dig_up_to_5).
 
 6 - **Put the dirt sample in the drop zone**: The rover can put the dirt sample in a specific drop zone. The dataset used to train this action is available [here](https://huggingface.co/spaces/lerobot/visualize_dataset?path=%2Fvladfatu%2Fgemma_rover_drop_dirt_up_to_5%2Fepisode_0). The trained model is available [here](https://huggingface.co/vladfatu/gemma_rover_drop_dirt_up_to_5).
 
