@@ -23,12 +23,11 @@ Install dependencies:
 poetry install
 ```
 
-Install Ollama:
-```bash
-```
+Download and install Ollama from https://ollama.com/download
 
 Download Gemma 3n:4eb
 ```bash
+ollama run gemma3n:e4b
 ```
 
 Run simulation
@@ -81,7 +80,7 @@ This project was created for submission to the [Google - The Gemma 3n Impact Cha
 }
 ```
 
-It makes use of the LeRobot framework, which is a state-of-the-art machine learning framework for robotics in Pytorch:
+It makes use of the [LeRobot](https://github.com/huggingface/lerobot) framework, which is a state-of-the-art machine learning framework for robotics in Pytorch:
 
 ```bibtex
 @misc{cadene2024lerobot,
@@ -92,7 +91,7 @@ It makes use of the LeRobot framework, which is a state-of-the-art machine learn
 }
 ```
 
-It uses the ACT policy for complex arm manipulation tasks:
+It uses the [ACT](https://tonyzhaozh.github.io/aloha/) policy for complex arm manipulation tasks:
 
 ```bibtex
 @article{zhao2023learning,
@@ -103,7 +102,7 @@ It uses the ACT policy for complex arm manipulation tasks:
 }
 ```
 
-The physical rover is based on the LeKiwi robot, which is a low-cost, open-source robot platform:
+The physical rover is based on the [LeKiwi](https://github.com/SIGRobotics-UIUC/LeKiwi) robot, which is a low-cost, open-source robot platform:
 
 ```bibtex
 @misc{sigrobotics2024lekiwi,
