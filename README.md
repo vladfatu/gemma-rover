@@ -9,7 +9,7 @@ Gemma Rover uses a Gemma 3n model to control a LeKiwi robot in a Mars-like envir
 We were planning on using an agentic framework like ADK or smolagents for making decisions but we couldn't make them fit our use case and decided to implement our own setup that calls the LLM directly. Since this is a rover on Mars, it should think continuously, not just try to do a task and wait for further instructions. It should also be able to stop doing the task if there are threats to it's safety or it's longterm operational integrity.
 The way we think about it is that the rover should get the information it needs (about the environment, about itself and it's homebase, about it's long running task) every few seconds and decide what to do next.
 
-So we implemented what we call an Agentic Control Loop. On the main thread, we have a loop that prompts the LLM every few seconds with the current state of the robot and the environment. The LLM then decides what action to do next and spawns a thread to execute that action. In most cases, the action will take longer that it takes to go through the loop, so if the LLM decides to do the same action, nothing will. However, if it decides to do a different action, it will cancel the previous action and spawn a new thread to execute that action. This way, the LLM can make decisions in close to real-time. 
+So we implemented what we call an Agentic Control Loop. On the main thread, we have a loop that prompts the LLM every few seconds with the current state of the robot and the environment. The LLM then decides what action to do next and spawns a thread to execute that action. In most cases, the action will take longer that it takes to go through the loop, so if the LLM decides to do the same action, nothing will happen. However, if it decides to do a different action, it will cancel the previous action and spawn a new thread to execute that action. This way, the LLM can make decisions in close to real-time. 
 
 In our current setup, Gemma 3n:4eb is used on a Macbook(M2) and the loop runs at about 30 thoughts per minute. For our tests, we capped this at 3 thoughts per minute(run the loop every 20 seconds) to avoid having too many logs, but depending on the task, it can be increased.
 
@@ -20,18 +20,19 @@ The scenario is the one from the video at the start, the rover has a long runnin
 - the current implementation of the Agentic Control Loop was built specifically for this project, but it could be generalized to work in other scenarios where continuous monitoring and decision-making are required, like home automation, industrial automation, or other robotics applications.
 - the current implementation only uses the name of functions to pass on to the Gemma 3n model, but this could be implemented the same way Agent frameworks do it, by passing on the function signature and the arguments. This would allow for more complex actions to be added.
 - we could make Gemma 3n predict the next few actions instead of just the next one and let it know what it predicted the last time. This was not an issue in our scenario, but in a more complex environment, this could make the decision making more stable.
+- the current prompt is very simple(zero shot), and will need to be expanded if we want to add more complex tasks. We were pleasantly surprised that pretty much the first prompt we tried worked for the entire scenario, and since it was short, elegant and did the job, we kept it. However, for a more complicated scenario, we would probably need to add more context and provide examples of complicated decisions.
 
 ### Navigation
 The rover uses the LeRobot framework for navigation. It can navigate to specific locations using QR codes placed in the environment. The navigation is done using the `move_robot_to_qr_code` function from the `navigation.py` file, which moves the robot in front of a specific QR code location.
 
 #### Future Improvements
-- navigation was not a big focus of this project and it currently is a bit jittery and slow. There are obvious improvements that can be made here, both in terms of code, but also in terms of hardware. The cameras used don't have a good resolution or image stabilization, so the robot needs to move slowly to avoid losing the QR code.
+- navigation was not a big focus of this project and it currently is a bit jittery and slow. There are obvious improvements that can be made here, both in terms of code, but also in terms of hardware. The cameras used don't have good resolution or image stabilization, so the robot needs to move slowly to avoid losing the QR code.
 
 ### Arm Manipulation
 The rover uses the LeRobot framework and more specifically the [ACT](https://tonyzhaozh.github.io/aloha/) policy for arm manipulation. This is a state-of-the-art imitation learning policy that can learn complex tasks from relatively few demonstrations. 
-We have defined 7 actions that the rover can do. The datasets we recorded and the trained models for each action are open-sourced and are linked bellow next to each action:
+We have defined 7 actions that the rover can do. The datasets we recorded and the trained models for each action are open-sourced and are linked bellow, next to each action:
 
-
+1 - **Pick up the scoop**: The rover can pick up the red scoop from a specific location next to the homebase. The dataset used to train this action is available [here](https://huggingface.co/spaces/lerobot/visualize_dataset?path=%2Fvladfatu%2Fgemma_rover_scoop_up_to_5%2Fepisode_0). The trained model is available [here](https://huggingface.co/vladfatu/gemma_rover_scoop_up_to_4).
 
 #### Future Improvements
 - 
