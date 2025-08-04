@@ -64,6 +64,11 @@ git clone --recurse-submodules https://github.com/vladfatu/gemma-rover.git
 cd gemma-rover
 ```
 
+Install poetry if you don't have it already:
+```bash
+curl -sSL https://install.python-poetry.org | python3 -
+```
+
 Install dependencies:
 ```bash
 poetry install
@@ -95,11 +100,6 @@ Clone our modified version of LeRobot:
 git clone https://github.com/vladfatu/lerobot.git
 cd lerobot
 checkout feature/gemma_rover
-```
-
-Install poetry if you don't have it already:
-```bash
-curl -sSL https://install.python-poetry.org | python3 -
 ```
 
 Install dependencies:
