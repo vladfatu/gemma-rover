@@ -14,12 +14,31 @@ So we implemented what we call an Agentic Control Loop. On the main thread, we h
 In our current setup, Gemma 3n:4eb is used on a Macbook(M2) and the loop runs at about 30 thoughts per minute. For our tests, we capped this at 3 thoughts per minute(run the loop every 20 seconds) to avoid having too many logs, but depending on the task, it can be increased.
 
 Here is a log from a simulation run using "start_mars_simulation.py": https://gist.github.com/vladfatu/232492b4325303631e0f3a55dec81442
+The scenario is the one from the video at the start, the rover has a long running task of collecting dirt samples. At some point, a dust storm starts and the rover needs to seek shelter. After the storm passes, it needs to clean the solar panel and then continue with the long running task.
+
+#### Future Improvements
+- the current implementation of the Agentic Control Loop was built specifically for this project, but it could be generalized to work in other scenarios where continuous monitoring and decision-making are required, like home automation, industrial automation, or other robotics applications.
+- the current implementation only uses the name of functions to pass on to the Gemma 3n model, but this could be implemented the same way Agent frameworks do it, by passing on the function signature and the arguments. This would allow for more complex actions to be added.
+- we could make Gemma 3n predict the next few actions instead of just the next one and let it know what it predicted the last time. This was not an issue in our scenario, but in a more complex environment, this could make the decision making more stable.
 
 ### Navigation
+The rover uses the LeRobot framework for navigation. It can navigate to specific locations using QR codes placed in the environment. The navigation is done using the `move_robot_to_qr_code` function from the `navigation.py` file, which moves the robot in front of a specific QR code location.
+
+#### Future Improvements
+- navigation was not a big focus of this project and it currently is a bit jittery and slow. There are obvious improvements that can be made here, both in terms of code, but also in terms of hardware. The cameras used don't have a good resolution or image stabilization, so the robot needs to move slowly to avoid losing the QR code.
 
 ### Arm Manipulation
+The rover uses the LeRobot framework and more specifically the [ACT](https://tonyzhaozh.github.io/aloha/) policy for arm manipulation. This is a state-of-the-art imitation learning policy that can learn complex tasks from relatively few demonstrations. 
+We have defined 7 actions that the rover can do. The datasets we recorded and the trained models for each action are open-sourced and are linked bellow next to each action:
 
-### Setup Prerequisites
+
+
+#### Future Improvements
+- 
+
+# Setup Instructions
+
+#### Setup Prerequisites
 The project was done using a Macbook(M2) and a LeKiwi robot(raspberry pi 5). You should be able to easily set it up with Linux or Windows with a few tweaks, but we've only tested the provided instructions for MacOS.
 
 ## Simulation Setup
@@ -94,8 +113,6 @@ Start the simulation:
 ```bash
 poetry run python start_mars_simulation.py
 ```
-
-
 
 ## !!! Warning
 The LeRobot models used were trained on our datasets that used our robot with our environment. When you use a different robot, the calibration of the motors will be a bit different. You can try to run the models as they are, but make sure to have a fast way to disconnecting it if it starts moving strangely. You will most likely need to record your own datasets and train the models for the LeRobot actions. Feel free to define your own actions as changing the code to support new actions should be pretty straightforward. For help with training new models, check out the [LeRobot documentation](https://huggingface.co/docs/lerobot/main/en/il_robots#train-a-policy)
