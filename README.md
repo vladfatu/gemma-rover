@@ -39,7 +39,7 @@ poetry run python start_mars_simulation.py
 ## Full Setup(with robot)
 This section helps you setup a LeKiwi robot on top of the previous simulation setup. This is a lot more involved than the simulation step but it will allow you to run the actions on the robot.
 
-#### Build you LeKiwi robot by following the instructions in the [LeKiwi repository](https://github.com/SIGRobotics-UIUC/LeKiwi)
+#### Build your LeKiwi robot by following the instructions in the [LeKiwi repository](https://github.com/SIGRobotics-UIUC/LeKiwi)
 Make sure to take note of your robot's ip address and the ports of your cameras
 
 ### Setup gemma-rover on the raspberry pi:
