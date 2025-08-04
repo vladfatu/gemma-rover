@@ -1,4 +1,4 @@
-## Gemma Rover
+# Gemma Rover
 
 
 !!!!! Don't forget to change lerobot submodule from SSH to HTTPS so that anyone that clones the gemma-rover repo can use:
@@ -9,7 +9,7 @@ git clone --recurse-submodules https://github.com/vladfatu/gemma-rover.git
 The project was done using a Macbook(M2) and a LeKiwi robot(raspberry pi 5). You should be able to easily set it up with Linux or Windows with a few tweaks, but we've only tested the provided instructions for MacOS.
 
 
-### Simulation Setup
+## Simulation Setup
 This section helps you setup so you can run Gemma Rover in simulation on your laptop, no physical robot required. You will be able to see Gemma 3n make decisions in the defined scenario by choosing the next actions. Robot actions will be printed in the console.
 
 Clone the gemma-rover repo and it's submodules
@@ -36,13 +36,13 @@ poetry run python start_mars_simulation.py
 ```
 
 
-### Full Setup(with robot)
+## Full Setup(with robot)
 This section helps you setup a LeKiwi robot on top of the previous simulation setup. This is a lot more involved than the simulation step but it will allow you to run the actions on the robot.
 
-Build you LeKiwi robot:
+#### Build you LeKiwi robot by following the instructions in the [LeKiwi repository](https://github.com/SIGRobotics-UIUC/LeKiwi)
 Make sure to take note of your robot's ip address and the ports of your cameras
 
-Setup gemma-rover on the raspberry pi:
+### Setup gemma-rover on the raspberry pi:
 
 Clone our modified version of LeRobot:
 ```bash
@@ -62,8 +62,8 @@ poetry run python -m src.lerobot.robots.lekiwi.lekiwi_host --robot.id=gemma-rove
 ```
 
 
-### !!! Warning
-The trained LeRobot models were trained on our datasets that used our robot with our environment. When you use a different robot, the calibration of the motors will be a bit different. You can try to run the models as they are, but have a way to disconnect it fast if it starts moving strangely. You will most likely need to record your own datasets and train the models for the LeRobot actions. Feel free to define your own actions as changing the code to support new actions should be pretty straightforward.
+## !!! Warning
+The LeRobot models used were trained on our datasets that used our robot with our environment. When you use a different robot, the calibration of the motors will be a bit different. You can try to run the models as they are, but make sure to have a fast way to disconnecting it if it starts moving strangely. You will most likely need to record your own datasets and train the models for the LeRobot actions. Feel free to define your own actions as changing the code to support new actions should be pretty straightforward. For help with training new models, check out the [LeRobot documentation](https://huggingface.co/docs/lerobot/main/en/il_robots#train-a-policy)
 
 
 ## Citation
