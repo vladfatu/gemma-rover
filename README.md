@@ -47,7 +47,8 @@ We have defined 7 actions that the rover can do. The datasets we recorded and th
 7 - **Wipe the solar panel**: The rover can wipe the solar panel using the towel. The dataset used to train this action is available [here](https://huggingface.co/spaces/lerobot/visualize_dataset?path=%2Fvladfatu%2Fgemma_rover_wipe_solar_up_to_5%2Fepisode_0). The trained model is available [here](https://huggingface.co/vladfatu/gemma_rover_wipe_solar_up_to_5).
 
 #### Future Improvements
-- 
+ - more training examples in different conditions would help the models generalize better. The datasets were recorded in a garage and the lighting conditions were different than outside. The results were still pretty good but only in morning or evening light. During the day, they would strugle to do the task.
+ - we used one model for each action, but we could have used a single more generic model that could do all the tasks. This would probably not work that well with ACT, but it should work with a VLA model like pi0, groot or smolVLA. the downside of this is that the model would be considerably larger and for our current setup, it might be hard to run both the Gemma 3n model and the VLA model on the same device. However, this is a good direction to explore for future improvements.
 
 # Setup Instructions
 
@@ -94,6 +95,11 @@ Clone our modified version of LeRobot:
 git clone https://github.com/vladfatu/lerobot.git
 cd lerobot
 checkout feature/gemma_rover
+```
+
+Install poetry if you don't have it already:
+```bash
+curl -sSL https://install.python-poetry.org | python3 -
 ```
 
 Install dependencies:
