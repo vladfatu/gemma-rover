@@ -5,6 +5,8 @@ import ollama
 from base.lerobot_task_handler import LeRobotTaskHandler
 
 class GemmaThinkingLoop:
+    """Control loop for the rover using Gemma 3n for decision making."""
+    
     def __init__(self, state):
         self.state = state
         self.control_loop_thread = threading.Thread(target=self._control_loop)
@@ -49,21 +51,12 @@ class GemmaThinkingLoop:
 
         # Format the state into a system prompt or context
         prompt = f"""
-You are a control agent for a Mars rover. Based on the current state of the rover, decide what action it should take next.
-    
-Your priorities are as follows, in order:
-    1. Keep the rover safe
-    2. The solar panel needs to stay clean. The rover can wipe it only if it is holding the towel.
-    3. Complete the long running task
-
-Here are the current constraints:
-    1. The rover cannot pickup the scoop if it is holding the towel.
-    2. The rover cannot pickup the towel if it is holding the scoop.
-
-Respond only with one of the following function names (as plain text):
+    You are a control agent for a Mars rover. Based on the current state of the rover, decide what action it should take next.
+    Your mission is to complete the long running task from the current state, but should prioritize safety and operational efficiency.
+    Respond only with one of the following function names (as plain text):
     {self.gemma_rover.get_actions()}
 
-Current State of the rover:
+    Current State:
     {state}
     """
 

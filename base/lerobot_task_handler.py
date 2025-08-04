@@ -11,6 +11,8 @@ from base.navigation import move_robot_to_qr_code
 
 
 class LeRobotTaskHandler:
+    """Handles tasks for the rover using the LeRobot framework."""
+
     def __init__(self, state, use_real_robot=False):
         self.state = state
         self.use_real_robot = use_real_robot
@@ -61,6 +63,8 @@ class LeRobotTaskHandler:
         return actions
 
     def pick_up_scoop(self, cancel_event):
+        if self.state.get_snapshot()["is_holding_towel"]:
+            self.put_towel_back(cancel_event)
         print("[Navigation] Moving to scoop location...")
         if self.use_real_robot:
             move_robot_to_qr_code(self.robot, "DEST:Scoop", cancel_event, self.state.get_snapshot()["inside_base"])
@@ -111,6 +115,8 @@ class LeRobotTaskHandler:
 
 
     def pick_up_towel(self, cancel_event):
+        if self.state.get_snapshot()["is_holding_scoop"]:
+            self.put_scoop_back(cancel_event)
         print("[Navigation] Moving to towel location...")
         if self.use_real_robot:
             move_robot_to_qr_code(self.robot, "DEST:Cloth", cancel_event, self.state.get_snapshot()["inside_base"])
@@ -212,6 +218,8 @@ class LeRobotTaskHandler:
 
 
     def wipe_solar_panel(self, cancel_event):
+        if self.state.get_snapshot()["is_holding_towel"] is False:
+            self.pick_up_towel(cancel_event)
         print("[Navigation] Moving to photon harvester...")
         if self.use_real_robot:
             move_robot_to_qr_code(self.robot, "DEST:SolarPanel", cancel_event, self.state.get_snapshot()["inside_base"])
@@ -233,7 +241,7 @@ class LeRobotTaskHandler:
                     return
                 time.sleep(1)
 
-        self.state.update_state(solar_panel_clean=True)
+        self.state.update_state(solar_panel_dirty=False)
         print("[LeRobot] Photon harvester wiped clean.")
 
     def seek_shelter(self, cancel_event):

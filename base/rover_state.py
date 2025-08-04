@@ -10,7 +10,7 @@ class RoverState:
         self.is_holding_scoop = False
         self.is_holding_towel = False
         self.has_dirt_sample = False
-        self.solar_panel_clean = False
+        self.solar_panel_dirty = False
         self.storm_watch_status = RoverStormWatchStatus.NO_STORM
         self.long_running_task = "Gather dirt samples and move them to the drop zone"
   
@@ -26,7 +26,7 @@ class RoverState:
                 "is_holding_scoop": self.is_holding_scoop,
                 "is_holding_towel": self.is_holding_towel,
                 "has_dirt_sample": self.has_dirt_sample,
-                "solar_panel_clean": self.solar_panel_clean,
+                "solar_panel_dirty": self.solar_panel_dirty,
                 "storm_watch_status": self.storm_watch_status,
                 "long_running_task": self.long_running_task
             }
@@ -38,7 +38,7 @@ class RoverState:
                 "is_holding_scoop": self.is_holding_scoop,
                 "is_holding_towel": self.is_holding_towel,
                 "has_dirt_sample": self.has_dirt_sample,
-                "solar_panel_clean": self.solar_panel_clean,
+                "solar_panel_dirty": self.solar_panel_dirty,
                 "storm_watch_status": self.storm_watch_status.value,
                 "long_running_task": self.long_running_task
             }, indent=2)
