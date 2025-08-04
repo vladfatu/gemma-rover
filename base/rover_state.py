@@ -7,12 +7,12 @@ class RoverState:
         self._lock = threading.Lock()
 
         self.inside_base = True
-        self.has_scoop = False
-        self.has_cloth = False
+        self.is_holding_scoop = False
+        self.is_holding_towel = False
         self.has_dirt_sample = False
-        self.solar_panel_dirty = False
+        self.solar_panel_clean = False
         self.storm_watch_status = RoverStormWatchStatus.NO_STORM
-        self.long_running_task = "Gather dirt samples and move them to drop zone"
+        self.long_running_task = "Gather dirt samples and move them to the drop zone"
   
     def update_state(self, **kwargs):
         with self._lock:
@@ -23,10 +23,10 @@ class RoverState:
         with self._lock:
             return {
                 "inside_base": self.inside_base,
-                "has_scoop": self.has_scoop,
-                "has_cloth": self.has_cloth,
+                "is_holding_scoop": self.is_holding_scoop,
+                "is_holding_towel": self.is_holding_towel,
                 "has_dirt_sample": self.has_dirt_sample,
-                "solar_panel_dirty": self.solar_panel_dirty,
+                "solar_panel_clean": self.solar_panel_clean,
                 "storm_watch_status": self.storm_watch_status,
                 "long_running_task": self.long_running_task
             }
@@ -35,10 +35,10 @@ class RoverState:
         with self._lock:
             return json.dumps({
                 "inside_base": self.inside_base,
-                "has_scoop": self.has_scoop,
-                "has_cloth": self.has_cloth,
+                "is_holding_scoop": self.is_holding_scoop,
+                "is_holding_towel": self.is_holding_towel,
                 "has_dirt_sample": self.has_dirt_sample,
-                "solar_panel_dirty": self.solar_panel_dirty,
+                "solar_panel_clean": self.solar_panel_clean,
                 "storm_watch_status": self.storm_watch_status.value,
                 "long_running_task": self.long_running_task
             }, indent=2)

@@ -14,7 +14,6 @@ class GemmaThinkingLoop:
         self.cancel_event = threading.Event()
         self.stop_requested = False
         self.gemma_rover = LeRobotTaskHandler(state)
-        print("self.gemma_rover.get_actions():", self.gemma_rover.get_actions())
 
     def start(self):
         self.control_loop_thread.start()
@@ -30,7 +29,7 @@ class GemmaThinkingLoop:
         while not self.stop_requested:
             start_time = time.time()
 
-            print("[Control Loop] Thinking with LLM...")
+            print("[Control Loop] Thinking with Gemma 3n...")
             action_to_run = self._decide_next_action_with_llm()
 
             if self.stop_requested:
@@ -40,7 +39,7 @@ class GemmaThinkingLoop:
                 self._start_action(action_to_run)
 
             elapsed = time.time() - start_time
-            sleep_time = max(30.0 - elapsed, 0.0)
+            sleep_time = max(20.0 - elapsed, 0.0)
             print(f"[Control Loop] Sleeping {sleep_time:.1f}s before next cycle.")
             time.sleep(sleep_time)
 
@@ -50,16 +49,25 @@ class GemmaThinkingLoop:
 
         # Format the state into a system prompt or context
         prompt = f"""
-    You are a control agent for a Mars rover. Based on the current state of the rover, decide what action it should take next.
-    Your mission is to complete the long running task from the current state, but should prioritize safety and operational efficiency.
-    Respond only with one of the following function names (as plain text):
+You are a control agent for a Mars rover. Based on the current state of the rover, decide what action it should take next.
+    
+Your priorities are as follows, in order:
+    1. Keep the rover safe
+    2. The solar panel needs to stay clean. The rover can wipe it only if it is holding the towel.
+    3. Complete the long running task
+
+Here are the current constraints:
+    1. The rover cannot pickup the scoop if it is holding the towel.
+    2. The rover cannot pickup the towel if it is holding the scoop.
+
+Respond only with one of the following function names (as plain text):
     {self.gemma_rover.get_actions()}
 
-    Current State:
+Current State of the rover:
     {state}
     """
-        
-        print(f"[LLM] Sending prompt to model: {prompt}")
+
+        print(f"[Control Loop] Sending prompt to model: {prompt}")
         try:
             response = ollama.chat(
                 model="gemma3n:e4b", 
@@ -70,12 +78,12 @@ class GemmaThinkingLoop:
             )
 
             model_reply = response["message"]["content"].strip().lower()
-            print(f"[LLM] Suggested action: {model_reply}")
+            print(f"[Gemma 3n] Suggested action: {model_reply}")
 
             return model_reply
 
         except Exception as e:
-            print(f"[LLM ERROR] Failed to call Ollama: {e}")
+            print(f"[Gemma 3n ERROR] Failed to call Ollama: {e}")
             return None
 
 
@@ -96,15 +104,15 @@ class GemmaThinkingLoop:
                 and self.action_thread.is_alive()
                 and self.current_action_fn == action_fn_name
             ):
-                print("[Action] Same action already running. Skipping restart.")
+                print("[Control Loop] Same action already running.")
                 return
 
             # Cancel current action if different
             if self.action_thread and self.action_thread.is_alive():
-                print("[Action] Cancelling current action...")
+                print("[Control Loop] Cancelling current action...")
                 self.cancel_event.set()
                 self.action_thread.join()
-                print("[Action] Previous action stopped.")
+                print("[Control Loop] Previous action stopped.")
 
             self.cancel_event.clear()
             self.current_action_fn = action_fn_name
