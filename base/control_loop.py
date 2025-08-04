@@ -7,7 +7,7 @@ from base.lerobot_task_handler import LeRobotTaskHandler
 class GemmaThinkingLoop:
     """Control loop for the rover using Gemma 3n for decision making."""
     
-    def __init__(self, state):
+    def __init__(self, state,use_real_robot=False):
         self.state = state
         self.control_loop_thread = threading.Thread(target=self._control_loop)
         self.action_thread = None
@@ -15,7 +15,7 @@ class GemmaThinkingLoop:
         self.current_action_fn = None
         self.cancel_event = threading.Event()
         self.stop_requested = False
-        self.gemma_rover = LeRobotTaskHandler(state)
+        self.gemma_rover = LeRobotTaskHandler(state, use_real_robot)
 
     def start(self):
         self.control_loop_thread.start()

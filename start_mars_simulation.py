@@ -7,7 +7,7 @@ from base.lerobot_task_handler import LeRobotTaskHandler
 
 
 state = RoverState()
-controller = GemmaThinkingLoop(state)
+controller = GemmaThinkingLoop(state, use_real_robot=False)
 controller.start()
 
 # Optional: simulate storm after some time
