@@ -10,7 +10,7 @@ The project uses a LeKiwi robot, a Macbook with an M2 chip and a travel router t
 
 In the future, we could use a Jetson AGX Orin(or maybe even a Jetson Orin Nano) to remove the need for a Macbook, but we didn't have one available at the time of the project.
 
-### Control Loop
+## Control Loop
 We were planning on using an agentic framework like ADK or smolagents for making decisions but we couldn't make them fit our use case and decided to implement our own setup that calls the LLM directly. Since this is a rover on Mars, it should think continuously, not just try to do a task and wait for further instructions. It should also be able to stop doing the task if there are threats to it's safety or it's longterm operational integrity.
 The way we think about it is that the rover should get the information it needs (about the environment, about itself and it's homebase, about it's long running task) every few seconds and decide what to do next.
 
@@ -27,13 +27,13 @@ The scenario is the one from the video at the start, the rover has a long runnin
 - we could make Gemma 3n predict the next few actions instead of just the next one and let it know what it predicted the last time. This was not an issue in our scenario, but in a more complex environment, this could make the decision making more stable.
 - the current prompt is very simple(zero shot), and will need to be expanded if we want to add more complex tasks. We were pleasantly surprised that pretty much the first prompt we tried worked for the entire scenario, and since it was short, elegant and did the job, we kept it. However, for a more complicated scenario, we would probably need to add more context, better define the priorities and provide examples of complicated decisions.
 
-### Navigation
+## Navigation
 The rover uses the LeRobot framework for navigation. It can navigate to specific locations using QR codes placed in the environment. The navigation is done using the `move_robot_to_qr_code` function from the `navigation.py` file, which moves the robot in front of a specific QR code location.
 
 #### Future Improvements
 - navigation was not a big focus of this project and it currently is a bit jittery and slow. There are obvious improvements that can be made here, both in terms of code, but also in terms of hardware. The cameras used don't have good resolution or image stabilization, so the robot needs to move slowly to avoid losing the QR code.
 
-### Arm Manipulation
+## Arm Manipulation
 The rover uses the LeRobot framework and more specifically the [ACT](https://tonyzhaozh.github.io/aloha/) policy for arm manipulation. This is a state-of-the-art imitation learning policy that can learn complex tasks from relatively few demonstrations. 
 We have defined 7 actions that the rover can do. The datasets we recorded and the trained models for each action are open-sourced and are linked bellow, next to each action:
 
