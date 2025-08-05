@@ -6,7 +6,8 @@ TODO - add video of the rover in action
 Gemma Rover uses a Gemma 3n model to control a LeKiwi robot in a Mars-like environment. The project showcases Gemma 3n’s ability to make real-time decisions locally in a robotics context. This is crucial in scenarios where cloud services are not available and human support is 30 minutes away. This setup highlights the potential of running large language models on-device for autonomous, context-aware behavior in remote or constrained environments.
 
 ## Hardware Setup and Communication
-The project uses a LeKiwi robot, a Macbook with an M2 chip and a travel router to connect the two devices. The Macbook is used to run the Gemma 3n model and the ACT models used for arm manipulation. Communication between the Macbook and the robot is done over a local network using ZeroMQ.
+The project uses a LeKiwi robot, a Macbook with an M2 chip and a travel router to connect the two devices. The Macbook is used to run the Gemma 3n model and the ACT models used for arm manipulation. Communication between the Macbook and the robot is done over a local network using ZeroMQ. 
+In the future, we could use a Jetson AGX Orin(or maybe even a Jetson Orin Nano) to remove the need for a Macbook, but we didn't have one available at the time of the project.
 
 ### Control Loop
 We were planning on using an agentic framework like ADK or smolagents for making decisions but we couldn't make them fit our use case and decided to implement our own setup that calls the LLM directly. Since this is a rover on Mars, it should think continuously, not just try to do a task and wait for further instructions. It should also be able to stop doing the task if there are threats to it's safety or it's longterm operational integrity.
