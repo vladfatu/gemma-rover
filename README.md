@@ -5,13 +5,16 @@ TODO - add video of the rover in action
 ## Project Overview
 Gemma Rover uses a Gemma 3n model to control a LeKiwi robot in a Mars-like environment. The project showcases Gemma 3n’s ability to make real-time decisions locally in a robotics context. This is crucial in scenarios where cloud services are not available and human support is 30 minutes away. This setup highlights the potential of running large language models on-device for autonomous, context-aware behavior in remote or constrained environments.
 
+## Hardware Setup and Communication
+The project uses a LeKiwi robot, a Macbook with an M2 chip and a travel router to connect the two devices. The Macbook is used to run the Gemma 3n model and the ACT models used for arm manipulation. Communication between the Macbook and the robot is done over a local network using ZeroMQ.
+
 ### Control Loop
 We were planning on using an agentic framework like ADK or smolagents for making decisions but we couldn't make them fit our use case and decided to implement our own setup that calls the LLM directly. Since this is a rover on Mars, it should think continuously, not just try to do a task and wait for further instructions. It should also be able to stop doing the task if there are threats to it's safety or it's longterm operational integrity.
 The way we think about it is that the rover should get the information it needs (about the environment, about itself and it's homebase, about it's long running task) every few seconds and decide what to do next.
 
 So we implemented what we call an Agentic Control Loop. On the main thread, we have a loop that prompts the LLM every few seconds with the current state of the robot and the environment. The LLM then decides what action to do next and spawns a thread to execute that action. In most cases, the action will take longer that it takes to go through the loop, so if the LLM decides to do the same action, nothing will happen. However, if it decides to do a different action, it will cancel the previous action and spawn a new thread to execute that action. This way, the LLM can make decisions in close to real-time. 
 
-In our current setup, Gemma 3n:4eb is used on a Macbook(M2) and the loop runs at about 30 thoughts per minute. For our tests, we capped this at 3 thoughts per minute(run the loop every 20 seconds) to avoid having too many logs, but depending on the task, it can be increased.
+In our current setup, Gemma 3n:4eb is used on a Macbook(M2) and the loop runs at about 30 instructions per minute. For our tests, we capped this at 3 instructions per minute(run the loop every 20 seconds) to avoid having too many logs, but depending on the task, it can be increased.
 
 Here is a log from a simulation run using "start_mars_simulation.py": https://gist.github.com/vladfatu/232492b4325303631e0f3a55dec81442
 The scenario is the one from the video at the start, the rover has a long running task of collecting dirt samples. At some point, a dust storm starts and the rover needs to seek shelter. After the storm passes, it needs to clean the solar panel and then continue with the long running task.
