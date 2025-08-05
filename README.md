@@ -1,6 +1,6 @@
 # Gemma Rover
 
-[![rover_in_the_sand](https://github.com/user-attachments/assets/1c878f72-6259-4276-a457-1f6d7f691cbe)](https://youtu.be/CN7uW8ERaWE)
+[![rover_in_the_sand](https://github.com/user-attachments/assets/b4cfacdc-86c5-444b-86e3-0fc23d3f8e78)](https://youtu.be/CN7uW8ERaWE)
 
 ## Project Overview
 Gemma Rover uses a Gemma 3n model to control a LeKiwi robot in a Mars-like environment. The project showcases Gemma 3n’s ability to make real-time decisions locally in a robotics context. This is crucial in scenarios where cloud services are not available and human support is 30 minutes away. This setup highlights the potential of running large language models on-device for autonomous, context-aware behavior in remote or constrained environments.
