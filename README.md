@@ -19,7 +19,7 @@ So we implemented what we call an Agentic Control Loop. On the main thread, we h
 In our current setup, Gemma 3n:4eb is used on a Macbook(M2) and the loop runs at about 30 instructions per minute. For our tests, we capped this at 3 instructions per minute(run the loop every 20 seconds) to avoid having too many logs, but depending on the task, it can be increased.
 
 Here is a log from a simulation run using "start_mars_simulation.py": https://gist.github.com/vladfatu/232492b4325303631e0f3a55dec81442
-The scenario is the one from the video at the start, the rover has a long running task of collecting dirt samples. At some point, a dust storm starts and the rover needs to seek shelter. After the storm passes, it needs to clean the solar panel and then continue with the long running task.
+The scenario is the one from the video: At the start, the rover has a long running task of collecting dirt samples. At some point, a dust storm starts and the rover needs to seek shelter. After the storm passes, it needs to clean the solar panel and then continue with the long running task.
 
 #### Future Improvements
 - the current implementation of the Agentic Control Loop was built specifically for this project, but it could be generalized to work in other scenarios where continuous monitoring and decision-making are required, like home automation, industrial automation, or other robotics applications.
