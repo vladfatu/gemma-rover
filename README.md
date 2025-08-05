@@ -28,13 +28,13 @@ The scenario is the one from the video: At the start, the rover has a long runni
 - the current prompt is very simple(zero shot), and will need to be expanded if we want to add more complex tasks. We were pleasantly surprised that pretty much the first prompt we tried worked for the entire scenario, and since it was short, elegant and did the job, we kept it. However, for a more complicated scenario, we would probably need to add more context, better define the priorities and provide examples of complicated decisions.
 
 ## Navigation
-The rover uses the LeRobot framework for navigation. It can navigate to specific locations using QR codes placed in the environment. The navigation is done using the `move_robot_to_qr_code` function from the `navigation.py` file, which moves the robot in front of a specific QR code location.
+The rover uses the [LeRobot](https://github.com/huggingface/lerobot) framework for navigation. It can navigate to specific locations using QR codes placed in the environment. The navigation is done using the `move_robot_to_qr_code` function from the `navigation.py` file, which moves the robot in front of a specific QR code location.
 
 #### Future Improvements
 - navigation was not a big focus of this project and it currently is a bit jittery and slow. There are obvious improvements that can be made here, both in terms of code, but also in terms of hardware. The cameras used don't have good resolution or image stabilization, so the robot needs to move slowly to avoid losing the QR code.
 
 ## Arm Manipulation
-The rover uses the LeRobot framework and more specifically the [ACT](https://tonyzhaozh.github.io/aloha/) policy for arm manipulation. This is a state-of-the-art imitation learning policy that can learn complex tasks from relatively few demonstrations. 
+The rover uses the [LeRobot](https://github.com/huggingface/lerobot) framework and more specifically the [ACT](https://tonyzhaozh.github.io/aloha/) policy for arm manipulation. This is a state-of-the-art imitation learning policy that can learn complex tasks from relatively few demonstrations. 
 We have defined 7 actions that the rover can do. The datasets we recorded and the trained models for each action are open-sourced and are linked bellow, next to each action:
 
 1 - **Pick up the scoop**: The rover can pick up the red scoop from a specific location next to the homebase. The dataset used to train this action is available [here](https://huggingface.co/spaces/lerobot/visualize_dataset?path=%2Fvladfatu%2Fgemma_rover_scoop_up_to_5%2Fepisode_0). The trained model is available [here](https://huggingface.co/vladfatu/gemma_rover_scoop_up_to_4).
