@@ -7,6 +7,7 @@ Gemma Rover uses a Gemma 3n model to control a LeKiwi robot in a Mars-like envir
 
 ## Hardware Setup and Communication
 The project uses a LeKiwi robot, a Macbook with an M2 chip and a travel router to connect the two devices. The Macbook is used to run the Gemma 3n model and the ACT models used for arm manipulation. Communication between the Macbook and the robot is done over a local network using ZeroMQ. 
+
 In the future, we could use a Jetson AGX Orin(or maybe even a Jetson Orin Nano) to remove the need for a Macbook, but we didn't have one available at the time of the project.
 
 ### Control Loop
